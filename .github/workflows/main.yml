@@ -25,7 +25,7 @@ jobs:
 
     - name: Install Depot Tools
       run: |
-        git clone googlesource.com $HOME/depot_tools
+        git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git $HOME/depot_tools
         echo "$HOME/depot_tools" >> $GITHUB_PATH
 
     - name: Bootstrap ANGLE Source
@@ -34,7 +34,7 @@ jobs:
         mkdir angle-build && cd angle-build
         
         # Configure gclient to download Android dependencies
-        gclient config --name=angle googlesource.com
+        gclient config --name=angle https://chromium.googlesource.com/angle/angle
         echo "target_os = ['android']" >> .gclient
         
         # Synchronize source code (shallow clone to save space and time)
