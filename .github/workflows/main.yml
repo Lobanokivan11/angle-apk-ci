@@ -59,7 +59,6 @@ jobs:
           target_cpu="arm64"
           android_secondary_abi_cpu="arm"
           is_debug=false
-          is_official_build=true
           is_component_build=false
           symbol_level=0
           angle_assert_always_on=false
