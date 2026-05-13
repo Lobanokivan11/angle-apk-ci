@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions: write-all
     steps:
     - name: Free Disk Space
       run: |
@@ -77,3 +77,11 @@ jobs:
       with:
         name: AngleLibraries-MultiArch
         path: angle-build/angle/out/Android/apks/AngleLibraries.apk
+    - name: Release Angle apk
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: angle-build/angle/out/Android/apks/AngleLibraries.apk
+        tag: build
+        overwrite: true
+        body: "ANGLE APK Libraries build"
