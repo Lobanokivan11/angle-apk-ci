@@ -1,0 +1,79 @@
+name: Build ANGLE Android Multi-Arch APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allows manual workflow triggers
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Free Disk Space
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/ghc
+        sudo rm -rf "/usr/local/share/boost"
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git python3 python3-pip curl snapd
+
+    - name: Install Depot Tools
+      run: |
+        git clone googlesource.com $HOME/depot_tools
+        echo "$HOME/depot_tools" >> $GITHUB_PATH
+
+    - name: Bootstrap ANGLE Source
+      run: |
+        export PATH="$HOME/depot_tools:$PATH"
+        mkdir angle-build && cd angle-build
+        
+        # Configure gclient to download Android dependencies
+        gclient config --name=angle googlesource.com
+        echo "target_os = ['android']" >> .gclient
+        
+        # Synchronize source code (shallow clone to save space and time)
+        gclient sync --no-history
+
+    - name: Install Android Build Dependencies
+      run: |
+        export PATH="$HOME/depot_tools:$PATH"
+        cd angle-build/angle
+        # Run the official Chromium script to install system packages
+        sudo ./build/install-build-deps.sh --android
+
+    - name: Generate Build Files (GN)
+      run: |
+        export PATH="$HOME/depot_tools:$PATH"
+        cd angle-build/angle
+        mkdir -p out/Android
+        
+        # Configuration to compile all 4 architectures into a single APK
+        gn gen out/Android --args='
+          target_os="android"
+          target_cpu="arm64"
+          android_secondary_abi_cpu="arm"
+          android_native_lib_toolchain_addresses=["//build/toolchain/android:android_clang_arm", "//build/toolchain/android:android_clang_x64", "//build/toolchain/android:android_clang_x86"]
+          is_debug=false
+          is_component_build=false
+          symbol_level=0
+          angle_assert_always_on=false
+        '
+
+    - name: Build ANGLE APK
+      run: |
+        export PATH="$HOME/depot_tools:$PATH"
+        cd angle-build/angle
+        # Build the target APK package using Ninja via autoninja utility
+        autoninja -C out/Android angle_apks
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: AngleLibraries-MultiArch
+        path: angle-build/angle/out/Android/apks/AngleLibraries.apk
