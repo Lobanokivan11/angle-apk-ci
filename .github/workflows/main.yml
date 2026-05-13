@@ -57,7 +57,7 @@ jobs:
         gn gen out/Android --args='
           target_os="android"
           target_cpu="arm64"
-          android_secondary_abi_cpu="arm"
+          enable_android_secondary_abi=true
           is_debug=false
           is_component_build=false
           symbol_level=0
