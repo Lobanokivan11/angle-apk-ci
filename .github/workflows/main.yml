@@ -4,6 +4,8 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch: # Allows manual workflow triggers
+  schedule:
+  - cron: "0 * * * *"
 
 jobs:
   build:
@@ -53,13 +55,12 @@ jobs:
         cd angle-build/angle
         mkdir -p out/Android
         
-        # Configuration to compile all 4 architectures into a single APK
         gn gen out/Android --args='
           target_os="android"
           target_cpu="arm64"
           android_secondary_abi_cpu="arm"
-          android_native_lib_toolchain_addresses=["//build/toolchain/android:android_clang_arm", "//build/toolchain/android:android_clang_x64", "//build/toolchain/android:android_clang_x86"]
           is_debug=false
+          is_official_build=true
           is_component_build=false
           symbol_level=0
           angle_assert_always_on=false
