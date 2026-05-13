@@ -54,7 +54,6 @@ jobs:
         export PATH="$HOME/depot_tools:$PATH"
         cd angle-build/angle
         mkdir -p out/Android
-        
         gn gen out/Android --args='
           target_os="android"
           target_cpu="arm64"
@@ -65,6 +64,7 @@ jobs:
           symbol_level=0
           angle_assert_always_on=false
         '
+        gn args --list out/Android
 
     - name: Build ANGLE APK
       run: |
