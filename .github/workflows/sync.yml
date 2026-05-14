@@ -117,7 +117,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@github.com"
-          git add app/
+          git add .
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
