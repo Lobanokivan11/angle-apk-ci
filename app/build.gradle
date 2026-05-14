@@ -1,0 +1,26 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.android.angle'
+    compileSdk = 37
+
+    defaultConfig {
+        applicationId "com.android.angle"
+        minSdk = 35
+        targetSdk = 37
+        versionCode 100
+        versionName "100"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+dependencies {
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.preference
+}
