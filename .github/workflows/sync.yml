@@ -23,6 +23,10 @@ jobs:
           rm -rf app/src/main/res
           rm -rf app/src/main/assets
           rm -f app/src/main/AndroidManifest.xml
+          rm -f build.gradle
+          rm -f settings.gradle
+          rm -rf gradle/
+          rm -f app/build.gradle
       - name: Reorganize and Copy Files
         run: |
           mkdir -p app/src/main/java/com/android/angle
@@ -104,6 +108,9 @@ jobs:
       - name: Setup Gradle Wrapper
         run: |
           gradle wrapper --gradle-version 8.5 --distribution-type bin
+      - name: Clean up source before push
+        run: |
+          rm -rf template
 
       - name: Commit and Push changes
         run: |
