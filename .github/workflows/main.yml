@@ -80,9 +80,7 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file_glob: true
-        file: |
-          angle-build/angle/out/Android/apks/AngleLibraries.apk
-        tag: build
+        file: angle-build/angle/out/Android/apks/AngleLibraries.apk
+        tag: build-lib
         overwrite: true
         body: "ANGLE APK Libraries (AngleLibraries.apk) builds"
