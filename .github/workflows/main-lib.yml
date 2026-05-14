@@ -1,4 +1,4 @@
-name: Build ANGLE Android Multi-Arch APK
+name: Build ANGLE Android Libraries APK
 
 on:
   push:
@@ -76,7 +76,7 @@ jobs:
       with:
         name: AngleLibraries-MultiArch
         path: angle-build/angle/out/Android/apks/AngleLibraries.apk
-    - name: Release Angle apk
+    - name: Release Angle (lib) apk
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
