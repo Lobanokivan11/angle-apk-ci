@@ -39,7 +39,7 @@ jobs:
     - name: CHMOD GRADLEW
       run: chmod 777 ./gradlew
     - name: Create local.properties
-      run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+      run: echo "sdk.dir=/usr/local/lib/android" > local.properties
     - name: Build with Gradle
       run: ./gradlew build
     - name: Build Debug APK
