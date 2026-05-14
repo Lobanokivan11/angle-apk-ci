@@ -1,0 +1,116 @@
+name: Sync ANGLE Settings
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout destination repository
+        uses: actions/checkout@v4
+
+      - name: Clone AOSP Settings repository
+        run: |
+          git clone https://chromium.googlesource.com/angle/angle template
+      - name: Clean up old assets and source files
+        run: |
+          rm -rf app/src/main/java/com/android/angle
+          rm -rf app/src/main/res
+          rm -rf app/src/main/assets
+          rm -f app/src/main/AndroidManifest.xml
+      - name: Reorganize and Copy Files
+        run: |
+          mkdir -p app/src/main/java/com/android/angle
+          mkdir -p app/src/main/res
+          mkdir -p app/src/main/assets
+          cp -r template/src/android_system_settings/src/com/android/angle/* app/src/main/java/com/android/angle/
+          cp template/src/android_system_settings/src/com/android/angle/AndroidManifest.xml app/src/main/AndroidManifest.xml
+          rm -f app/src/main/java/com/android/angle/AndroidManifest.xml
+          cp -r template/src/android_system_settings/res/* app/src/main/res/
+          cp -r template/src/android_system_settings/assets/* app/src/main/assets/
+      - name: Generate Gradle Build Files
+        run: |
+          cat << 'EOF' > settings.gradle
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+          rootProject.name = "AngleSettings"
+          include ':app'
+          EOF
+          cat << 'EOF' > build.gradle
+          plugins {
+              alias(libs.plugins.android.application) apply false
+          }
+          EOF
+          mkdir -p gradle
+          cat << 'EOF' > gradle/libs.versions.toml
+          [versions]
+          agp = "8.2.0"
+          compileSdk = "37"
+          targetSdk = "37"
+          minSdk = "35"
+          appcompat = "1.7.0"
+          preference = "1.2.1"
+          [libraries]
+          androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+          androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+          [plugins]
+          android-application = { id = "com.android.application", version.ref = "agp" }
+          EOF
+          cat << 'EOF' > app/build.gradle
+          plugins {
+              alias(libs.plugins.android.application)
+          }
+
+          android {
+              namespace 'com.android.angle'
+              compileSdk = 37
+
+              defaultConfig {
+                  applicationId "com.android.angle"
+                  minSdk = 35
+                  targetSdk = 37
+                  versionCode 100
+                  versionName "100"
+              }
+
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                  }
+              }
+          }
+          dependencies {
+              implementation libs.androidx.appcompat
+              implementation libs.androidx.preference
+          }
+          EOF
+      - name: Setup Gradle Wrapper
+        run: |
+          gradle wrapper --gradle-version 8.5 --distribution-type bin
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@github.com"
+          git add app/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Sync ANGLE source code from AOSP"
+            git push
+          fi
