@@ -112,6 +112,8 @@ jobs:
       - name: Clean up source before push
         run: |
           rm -rf template
+          rm -rf build
+          rm -rf .gradle
 
       - name: Commit and Push changes
         run: |
