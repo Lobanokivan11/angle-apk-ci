@@ -67,6 +67,12 @@
             <meta-data android:name="com.android.settings.order" android:value="20" />
             <meta-data android:name="com.android.settings.profile" android:value="primary_profile_only" />
             <meta-data android:name="instantapps.clients.allowed" android:value="true" />
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.MAIN" />
+                <category
+                    android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <receiver android:name="com.android.angle.common.Receiver"
