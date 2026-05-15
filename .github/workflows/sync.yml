@@ -263,7 +263,18 @@ jobs:
           rm -rf template
           rm -rf build
           rm -rf .gradle
-
+      - name: Insert Launcher Intent Filter
+        run: |
+          IMAGE_TEXT=$(cat << 'EOF'
+                      <intent-filter>
+                          <action
+                              android:name="android.intent.action.MAIN" />
+                          <category
+                              android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+          EOF
+          )
+          echo "$IMAGE_TEXT" | sed -i '/<\/activity>/e cat /dev/stdin' app/src/main/AndroidManifest.xml
       - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
