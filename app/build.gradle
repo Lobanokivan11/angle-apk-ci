@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace 'com.android.angle'
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId "com.android.angle"
         minSdk = 35
-        targetSdk = 37
+        targetSdk = 36
         versionCode 100
         versionName "100"
     }
