@@ -111,6 +111,16 @@ jobs:
                   }
               }
           }
+          configurations.all {
+              resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+                  def requested = details.requested
+                  if (requested.group == 'org.jetbrains.kotlin') {
+                      if (requested.name == 'kotlin-stdlib-jdk7' || requested.name == 'kotlin-stdlib-jdk8') {
+                          details.useTarget("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
+                      }
+                  }
+              }
+          }
           dependencies {
               implementation libs.androidx.core
               implementation libs.androidx.appcompat
