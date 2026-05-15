@@ -31,7 +31,13 @@ configurations.all {
         }
     }
 }
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile).configureEach {
+        options.bootstrapClasspath = files(configurations.compileOnly.files) + options.bootstrapClasspath
+    }
+}
 dependencies {
+    compileOnly libs.android.layoutlib
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.androidx.preference
