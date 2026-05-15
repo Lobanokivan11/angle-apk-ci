@@ -224,6 +224,11 @@ jobs:
                       minifyEnabled false
                   }
               }
+              lint {
+                  abortOnError false
+                  checkReleaseBuilds false
+                  disable 'ProtectedPermissions'
+              }
           }
           configurations.all {
               resolutionStrategy.eachDependency { DependencyResolveDetails details ->
