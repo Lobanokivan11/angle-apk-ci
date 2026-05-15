@@ -124,8 +124,11 @@ jobs:
               }
           }
           gradle.projectsEvaluated {
-              tasks.withType(JavaCompile).configureEach {
-                  options.bootstrapClasspath = files(configurations.compileOnly.files) + options.bootstrapClasspath
+              tasks.withType(JavaCompile).configureEach { task ->
+                  String configName = task.name.contains("Release") ? "releaseCompileClasspath" : "debugCompileClasspath"
+                  if (project.configurations.findByName(configName)) {
+                      task.options.bootstrapClasspath = files(project.configurations.getByName(configName).files) + task.options.bootstrapClasspath
+                  }
               }
           }
           dependencies {
