@@ -67,11 +67,11 @@ jobs:
           mkdir -p gradle
           cat << 'EOF' > gradle/libs.versions.toml
           [versions]
-          agp = "8.2.0"
+          agp = "8.4.0"
           compileSdk = "36"
           targetSdk = "36"
           minSdk = "35"
-          kotlin = "1.8.22"
+          kotlin = "1.9.24"
           appcompat = "1.7.0"
           preference = "1.2.1"
           core = "1.13.1"
@@ -119,7 +119,7 @@ jobs:
           EOF
       - name: Setup Gradle Wrapper
         run: |
-          gradle wrapper --gradle-version 8.5 --distribution-type bin
+          gradle wrapper --gradle-version 8.7 --distribution-type bin
       - name: Clean up source before push
         run: |
           rm -rf template
