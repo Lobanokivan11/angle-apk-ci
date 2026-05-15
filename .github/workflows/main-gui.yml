@@ -38,6 +38,10 @@ jobs:
         cache: gradle
     - name: CHMOD GRADLEW
       run: chmod 777 ./gradlew
+    - name: Fix Android SDK directory permissions
+      run: |
+        sudo mkdir -p /usr/local/lib/android
+        sudo chown -R $USER:$USER /usr/local/lib/android
     - name: Setup Android SDK Tools
       uses: android-actions/setup-android@main
     - name: Build with Gradle
