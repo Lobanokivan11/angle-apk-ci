@@ -60,6 +60,7 @@ jobs:
           EOF
           cat << 'EOF' > build.gradle
           plugins {
+              alias(libs.plugins.kotlin.android) apply false
               alias(libs.plugins.android.application) apply false
           }
           EOF
@@ -70,20 +71,25 @@ jobs:
           compileSdk = "36"
           targetSdk = "36"
           minSdk = "35"
+          kotlin = "1.8.22"
           appcompat = "1.7.0"
           preference = "1.2.1"
+          core = "1.13.1"
           [libraries]
           androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
           androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+          androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
           [plugins]
+          kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
           android-application = { id = "com.android.application", version.ref = "agp" }
           EOF
           cat << 'EOF' > gradle.properties
           android.useAndroidX=true
-          android.enableJetifier=false
+          android.enableJetifier=true
           EOF
           cat << 'EOF' > app/build.gradle
           plugins {
+              alias(libs.plugins.kotlin.android)
               alias(libs.plugins.android.application)
           }
 
@@ -106,6 +112,7 @@ jobs:
               }
           }
           dependencies {
+              implementation libs.androidx.core
               implementation libs.androidx.appcompat
               implementation libs.androidx.preference
           }
