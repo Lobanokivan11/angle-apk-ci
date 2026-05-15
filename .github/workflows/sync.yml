@@ -78,6 +78,10 @@ jobs:
           [plugins]
           android-application = { id = "com.android.application", version.ref = "agp" }
           EOF
+          cat << 'EOF' > gradle.properties
+          android.useAndroidX=true
+          android.enableJetifier=true
+          EOF
           cat << 'EOF' > app/build.gradle
           plugins {
               alias(libs.plugins.android.application)
