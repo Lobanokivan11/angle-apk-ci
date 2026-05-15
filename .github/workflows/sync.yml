@@ -80,7 +80,7 @@ jobs:
           EOF
           cat << 'EOF' > gradle.properties
           android.useAndroidX=true
-          android.enableJetifier=true
+          android.enableJetifier=false
           EOF
           cat << 'EOF' > app/build.gradle
           plugins {
