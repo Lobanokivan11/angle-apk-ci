@@ -59,8 +59,12 @@ jobs:
           target_cpu="arm64"
           enable_android_secondary_abi=true
           is_debug=false
+          angle_debug_layers_enabled=true
+          angle_enable_custom_vulkan_cmd_buffers=true
           is_component_build=false
+          angle_vulkan_api_perf_counters_mode=2
           symbol_level=0
+          angle_build_mesa=true
           angle_assert_always_on=false
         '
         gn args --list out/Android
