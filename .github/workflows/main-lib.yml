@@ -64,6 +64,8 @@ jobs:
           is_component_build=false
           angle_vulkan_api_perf_counters_mode=2
           symbol_level=0
+          angle_enable_vulkan=true
+          angle_enable_cl=true
           angle_build_mesa=true
           angle_assert_always_on=false
         '
